@@ -171,17 +171,17 @@ public class RulesReader {
 
 	// if a rule is fired don't fire it again(remove it from the conflict set)
 	public void refactoring() {
-		
+		ArrayList<Rule> newConflictSet = new ArrayList<Rule>();
 		for (int i = 0; i < conflictSet.size(); i++) {
-			// System.out.println("printingggg");
-			// System.out.println(conflictSet.get(i).getIF());
-			if (firedRules.contains(conflictSet.get(i))) {
-				conflictSet.remove(i);
+			if (!firedRules.contains(conflictSet.get(i)) && facts.containsAll(conflictSet.get(i).getIF())) {
+				newConflictSet.add(conflictSet.get(i));
 			}
 		}
-		for (int i =0; i< conflictSet.size();i++){
-			System.out.println(conflictSet.get(i));
-		}
+		conflictSet.clear();
+		conflictSet.addAll(newConflictSet);
+		// for (int i =0; i< conflictSet.size();i++){
+		// 	System.out.println(conflictSet.get(i));
+		// }
 	}
 
 	// el awlawya lel new fact added lel knowledge base

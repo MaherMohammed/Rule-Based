@@ -74,12 +74,12 @@ public class Rule implements Comparable <Rule> {
 	public String toString (){
 		String out = "IF ";
 		for(int i = 0 ; i< this.getIF().size();i++){ 
-			out += this.getIF().get(i);
+			out += this.getIF().get(i)+ " ";
 		}
 
 		out += "THEN ";
 		for(int i = 0 ; i< this.getTHEN().size();i++){ 
-			out += this.getTHEN().get(i);
+			out += this.getTHEN().get(i) + " ";
 		}
 
 		return out;
