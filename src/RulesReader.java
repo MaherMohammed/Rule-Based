@@ -187,7 +187,7 @@ public class RulesReader {
 			}
 		}
 
-		// if size bigger than 1 go to next strategy
+		// adding the rules to conflictset
 		if (newConflictSet.size() >= 1) {
 			conflictSet.clear();
 			conflictSet.addAll(newConflictSet);
