@@ -1,11 +1,11 @@
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Rule implements Comparable <Rule> {
+public class Rule implements Comparable<Rule> {
 	ArrayList<String> IF;
 	ArrayList<String> THEN;
 
-	public Rule  (String stringRule) {
+	public Rule(String stringRule) {
 		// TODO Auto-generated constructor stub
 		Boolean ifPartFlag = true;
 		String[] splitted = stringRule.split(" ");
@@ -56,29 +56,28 @@ public class Rule implements Comparable <Rule> {
 	}
 
 	@Override
-    public int compareTo(Rule anotherRule) {
+	public int compareTo(Rule anotherRule) {
 		ArrayList<String> firstIfPart = this.getIF();
 		ArrayList<String> secondIfPart = anotherRule.getIF();
 		ArrayList<String> firstThenPart = this.getTHEN();
 		ArrayList<String> secondThenPart = anotherRule.getTHEN();
-		
-		
-	 if (firstIfPart.containsAll(secondIfPart) && secondIfPart.containsAll(firstIfPart)
-		&& firstThenPart.containsAll(secondThenPart) && secondThenPart.containsAll(firstThenPart)){
+
+		if (firstIfPart.containsAll(secondIfPart) && secondIfPart.containsAll(firstIfPart)
+				&& firstThenPart.containsAll(secondThenPart) && secondThenPart.containsAll(firstThenPart)) {
 			return 0;
 		}
-	return 1;
+		return 1;
 	}
-	
+
 	@Override
-	public String toString (){
+	public String toString() {
 		String out = "IF ";
-		for(int i = 0 ; i< this.getIF().size();i++){ 
-			out += this.getIF().get(i)+ " ";
+		for (int i = 0; i < this.getIF().size(); i++) {
+			out += this.getIF().get(i) + " ";
 		}
 
 		out += "THEN ";
-		for(int i = 0 ; i< this.getTHEN().size();i++){ 
+		for (int i = 0; i < this.getTHEN().size(); i++) {
 			out += this.getTHEN().get(i) + " ";
 		}
 

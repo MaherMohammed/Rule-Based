@@ -19,10 +19,10 @@ public class RulesReader {
 	public static void main(String[] args) {
 		ArrayList<Rule> x = new ArrayList<Rule>();
 		ArrayList<String> y = new ArrayList<String>();
-		
-		//User inputs strategy
-		String strategyInput = "refactoring top_bottom";
-		System.out.println("strategy used is: "+ strategyInput);
+
+		// User inputs strategy
+		String strategyInput = "specifity top_bottom";
+		System.out.println("strategy used is: " + strategyInput);
 		RulesReader reader = new RulesReader(x, y, strategyInput);
 
 		// User inputs KB
@@ -32,9 +32,8 @@ public class RulesReader {
 		System.out.println(facts);
 
 		// Program reads Rules from file
-		reader.readRules("/home/tarzan/eclipse-workspace/RBgit/Rule-Based/src/rules.txt");
+		reader.readRules("E://guc//semster 9//Rule-Based Programming//finishing//Rule-Based//src//rules.txt");
 
-		
 		// Program starts matching rules and updates knowledge base
 		reader.run();
 
@@ -65,10 +64,12 @@ public class RulesReader {
 					// System.out.println("EOF");
 					break;
 				} else {
+					// System.out.println(line);
 					this.rules.add(new Rule(line));
 				}
 
 			}
+			// System.out.println(rules.size());
 		} catch (IOException e) {
 			System.out.println("Error occurred");
 		}
@@ -101,33 +102,31 @@ public class RulesReader {
 	}
 
 	public void run() {
-		
+
 		String[] splittedStrategy = strategyString.split(" ");
 		// System.out.println(splittedStrategy[1]);
 		int strategyIndex = 0;
 
-		
 		conflictSet.addAll(rules);
 		while (strategyIndex < splittedStrategy.length) {
-			
+
 			chooseS(splittedStrategy[strategyIndex]);
-			if (conflictSet.size() == 1){
+			if (conflictSet.size() == 1) {
 				fire(conflictSet.get(0));
+				conflictSet.clear();
 				conflictSet.addAll(rules);
 				strategyIndex = 0;
-			}
-			else {
+			} else {
 				if (conflictSet.size() == 0)
 					break;
 				else {
-					strategyIndex ++;
-					if (strategyIndex == splittedStrategy.length){
+					strategyIndex++;
+					if (strategyIndex == splittedStrategy.length) {
 						chooseS("top_bottom");
 					}
 				}
 			}
 		}
-		
 
 	}
 
@@ -146,26 +145,26 @@ public class RulesReader {
 
 	public void chooseS(String strategyName) {
 		switch (strategyName) {
-		case "refactoring":
-			refactoring();
-			break;
-		case "top_bottom":
-			topBottom();
-			break;
-		case "bottom_top":
-			bottomTop();
-			break;
-		case "recency":
-			recency();
-			break;
-		case "specifity":
-			specifity();
-			break;
-		case "hierarchical":
-			break;
-		case "linear":
-			break;
-		default:
+			case "refactoring":
+				refactoring();
+				break;
+			case "top_bottom":
+				topBottom();
+				break;
+			case "bottom_top":
+				bottomTop();
+				break;
+			case "recency":
+				recency();
+				break;
+			case "specifity":
+				specifity();
+				break;
+			case "hierarchical":
+				break;
+			case "linear":
+				break;
+			default:
 		}
 	}
 
@@ -180,7 +179,7 @@ public class RulesReader {
 		conflictSet.clear();
 		conflictSet.addAll(newConflictSet);
 		// for (int i =0; i< conflictSet.size();i++){
-		// 	System.out.println(conflictSet.get(i));
+		// System.out.println(conflictSet.get(i));
 		// }
 	}
 
@@ -191,8 +190,8 @@ public class RulesReader {
 		for (int i = facts.size() - 1; i >= 0 && !khallasnaFlag; i--) {
 			// facts.get(i)
 			for (int j = 0; j < conflictSet.size(); j++) {
-				if (conflictSet.get(j).getIF().contains(facts.get(i))
-						&& facts.containsAll(conflictSet.get(j).getIF())) {
+				if (conflictSet.get(j).getIF().contains(facts.get(i)) && facts.containsAll(conflictSet.get(j).getIF())
+						&& !firedRules.contains(conflictSet.get(j))) {
 					newConflictSet.add(conflictSet.get(j));
 				}
 			}
@@ -212,17 +211,17 @@ public class RulesReader {
 		// get the max size
 		// System.out.println(conflictSet.get(1).getLengthOfIF());
 		for (int i = 0; i < conflictSet.size(); i++) {
-			if (maxSize < conflictSet.get(i).getLengthOfIF()) {
+			if (maxSize < conflictSet.get(i).getLengthOfIF() && !firedRules.contains(conflictSet.get(i))) {
 				maxSize = conflictSet.get(i).getLengthOfIF();
 				// System.out.println(maxSize);
 			}
 		}
-
+		System.out.println(maxSize);
 		// get the rules that has the max size and put them in the new conflict set.
 
 		for (int i = 0; i < conflictSet.size(); i++) {
 			if (conflictSet.get(i).getLengthOfIF() == maxSize) {
-				if (facts.containsAll(conflictSet.get(i).getIF())) {
+				if (!firedRules.contains(conflictSet.get(i)) && facts.containsAll(conflictSet.get(i).getIF())) {
 					newConflictSet.add(conflictSet.get(i));
 				}
 
@@ -275,7 +274,7 @@ public class RulesReader {
 		ArrayList<Rule> newConflictSet = new ArrayList<Rule>();
 		boolean finished = false;
 		for (int i = 0; i < conflictSet.size() && finished == false; i++) {
-			if (facts.containsAll(conflictSet.get(i).getIF())) {
+			if (!firedRules.contains(conflictSet.get(i)) && facts.containsAll(conflictSet.get(i).getIF())) {
 				newConflictSet.add(conflictSet.get(i));
 				finished = true;
 			}
@@ -288,7 +287,7 @@ public class RulesReader {
 		ArrayList<Rule> newConflictSet = new ArrayList<Rule>();
 		boolean finished = false;
 		for (int i = conflictSet.size() - 1; i >= 0 && finished == false; i--) {
-			if (facts.containsAll(conflictSet.get(i).getIF())) {
+			if (!firedRules.contains(conflictSet.get(i)) && facts.containsAll(conflictSet.get(i).getIF())) {
 				newConflictSet.add(conflictSet.get(i));
 				finished = true;
 			}
