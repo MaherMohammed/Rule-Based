@@ -21,7 +21,7 @@ public class RulesReader {
 		ArrayList<String> y = new ArrayList<String>();
 
 		// User inputs strategy
-		String strategyInput = "specifity top_bottom";
+		String strategyInput = "specifity recency";
 		System.out.println("strategy used is: " + strategyInput);
 		RulesReader reader = new RulesReader(x, y, strategyInput);
 
@@ -123,6 +123,7 @@ public class RulesReader {
 					strategyIndex++;
 					if (strategyIndex == splittedStrategy.length) {
 						chooseS("top_bottom");
+						strategyIndex = 0;
 					}
 				}
 			}
@@ -185,6 +186,7 @@ public class RulesReader {
 
 	// el awlawya lel new fact added lel knowledge base
 	public void recency() {
+		System.out.println("in recency");
 		ArrayList<Rule> newConflictSet = new ArrayList<Rule>();
 		Boolean khallasnaFlag = false;
 		for (int i = facts.size() - 1; i >= 0 && !khallasnaFlag; i--) {
@@ -206,6 +208,7 @@ public class RulesReader {
 
 	// the most specific rule is the most one that has rules in the if part.
 	public void specifity() {
+		System.out.println("in specifity");
 		ArrayList<Rule> newConflictSet = new ArrayList<Rule>();
 		int maxSize = 0;
 		// get the max size
@@ -216,7 +219,7 @@ public class RulesReader {
 				// System.out.println(maxSize);
 			}
 		}
-		System.out.println(maxSize);
+		// System.out.println(maxSize);
 		// get the rules that has the max size and put them in the new conflict set.
 
 		for (int i = 0; i < conflictSet.size(); i++) {
@@ -271,6 +274,7 @@ public class RulesReader {
 	// }
 
 	public void topBottom() {
+		System.out.println("in topBottom");
 		ArrayList<Rule> newConflictSet = new ArrayList<Rule>();
 		boolean finished = false;
 		for (int i = 0; i < conflictSet.size() && finished == false; i++) {
