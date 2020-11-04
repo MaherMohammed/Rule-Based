@@ -53,6 +53,9 @@ public class RulesReader {
 
 		reader.generateFirstThreeLines();
 
+		iter = letters.iterator();
+		reader.writeLastProves();
+
 	}
 
 	public RulesReader(ArrayList<Rule> rules, ArrayList<String> facts, String strategy) {
@@ -346,7 +349,7 @@ public class RulesReader {
 
 		// write into the file
 		try {
-			FileWriter myWriter = new FileWriter("chrFile.txt", true);
+			FileWriter myWriter = new FileWriter("chrFile.txt");
 			// first Line
 			myWriter.write(":-use_module(library(chr)).\n");
 			// second line
@@ -366,6 +369,26 @@ public class RulesReader {
 			myWriter.write("prove(X)/prove(X) <=> true.\n");
 			myWriter.close();
 		} catch (IOException e) {
+			System.out.println("eror in writing file.....");
+		}
+
+	}
+
+	// public void writeBackChainLines() {
+
+	// }
+
+	public void writeLastProves() {
+		try {
+			FileWriter myWriter = new FileWriter("chrFile.txt", true);
+
+			while (iter.hasNext()) {
+				String theLetter = iter.next();
+				myWriter.write(theLetter + "/prove(" + theLetter + ")" + " <=> true.\n");
+			}
+			myWriter.close();
+		} catch (IOException e) {
+			// TODO: handle exception
 			System.out.println("eror in writing file.....");
 		}
 
