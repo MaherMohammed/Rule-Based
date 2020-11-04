@@ -7,6 +7,9 @@ public class RulesReader {
 	static ArrayList<Rule> conflictSet;
 	static String strategyString;
 	static ArrayList<Rule> firedRules;
+	// static ArrayList<String> letters;
+	static Set<String> letters;
+	static Iterator<String> iter;
 
 	/////////////////////////////////////////
 	/*
@@ -17,28 +20,39 @@ public class RulesReader {
 	 */
 	//////////////////////////////////////////
 	public static void main(String[] args) {
+		/*
+		 * ArrayList<Rule> x = new ArrayList<Rule>(); ArrayList<String> y = new
+		 * ArrayList<String>();
+		 * 
+		 * // User inputs strategy String strategyInput = "specifity recency";
+		 * System.out.println("strategy used is: " + strategyInput); RulesReader reader
+		 * = new RulesReader(x, y, strategyInput);
+		 * 
+		 * // User inputs KB String KBinput = "A,B,C,D"; reader.inputKB(KBinput);
+		 * System.out.println("KB befor running"); System.out.println(facts);
+		 * 
+		 * // Program reads Rules from file reader.
+		 * readRules("E:\guc\semster 9\Rule-Based Programming\task2 github\Rule-Based\src/rules.txt"
+		 * );
+		 * 
+		 * // Program starts matching rules and updates knowledge base reader.run();
+		 * 
+		 * System.out.println("KB after running"); System.out.println(facts);
+		 */
+		letters = new HashSet<String>();
+
 		ArrayList<Rule> x = new ArrayList<Rule>();
 		ArrayList<String> y = new ArrayList<String>();
-
-		// User inputs strategy
 		String strategyInput = "specifity recency";
 		System.out.println("strategy used is: " + strategyInput);
 		RulesReader reader = new RulesReader(x, y, strategyInput);
+		reader.readRules("E:/guc/semster 9/Rule-Based Programming/task2 github/Rule-Based/src/rules.txt");
 
-		// User inputs KB
-		String KBinput = "A,B,C,D";
-		reader.inputKB(KBinput);
-		System.out.println("KB befor running");
-		System.out.println(facts);
+		reader.saveInLetters();
+		iter = letters.iterator();
 
-		// Program reads Rules from file
-		reader.readRules("E://guc//semster 9//Rule-Based Programming//finishing//Rule-Based//src//rules.txt");
+		reader.generateFirstThreeLines();
 
-		// Program starts matching rules and updates knowledge base
-		reader.run();
-
-		System.out.println("KB after running");
-		System.out.println(facts);
 	}
 
 	public RulesReader(ArrayList<Rule> rules, ArrayList<String> facts, String strategy) {
@@ -298,6 +312,63 @@ public class RulesReader {
 		}
 		conflictSet.clear();
 		conflictSet.addAll(newConflictSet);
+	}
+
+	// iterate on rules variable to save all letters in lowercase
+
+	public void saveInLetters() {
+		for (int i = 0; i < rules.size(); i++) {
+			ArrayList<String> ifPart = rules.get(i).getIF();
+			ArrayList<String> thenPart = rules.get(i).getTHEN();
+
+			// iterate on ifparts
+			for (int j = 0; j < ifPart.size(); j++) {
+				letters.add(ifPart.get(j).toLowerCase());
+			}
+			// iterate on thenparts
+			for (int j = 0; j < thenPart.size(); j++) {
+				letters.add(thenPart.get(j).toLowerCase());
+			}
+		}
+	}
+
+	public void generateFirstThreeLines() {
+
+		// create the file
+		try {
+			File myObj = new File("chrFile.txt");
+			myObj.createNewFile();
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Error Happened!!");
+		}
+
+		// write into the file
+		try {
+			FileWriter myWriter = new FileWriter("chrFile.txt", true);
+			// first Line
+			myWriter.write(":-use_module(library(chr)).\n");
+			// second line
+			myWriter.write(":-chr_constraint forward/0,back/0,prove/1,");
+			// write letters into the second line
+			int index = 0;
+			while (iter.hasNext()) {
+				if (index == letters.size() - 1) {
+					myWriter.write(iter.next() + "/0.");
+
+				} else {
+					index++;
+					myWriter.write(iter.next() + "/0,");
+				}
+			}
+			myWriter.write("\n");
+			myWriter.write("prove(X)/prove(X) <=> true.\n");
+			myWriter.close();
+		} catch (IOException e) {
+			System.out.println("eror in writing file.....");
+		}
+
 	}
 
 }
