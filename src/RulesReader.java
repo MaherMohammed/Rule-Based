@@ -1,4 +1,7 @@
 import java.util.*;
+
+import javax.sound.midi.VoiceStatus;
+
 import java.io.*;
 
 public class RulesReader {
@@ -55,7 +58,12 @@ public class RulesReader {
 
 		iter = letters.iterator();
 		reader.writeBackChainLines();
-		// reader.writeLastProves();
+
+		iter = letters.iterator();
+		reader.writeForwardChainingRules();
+
+		iter = letters.iterator();
+		reader.writeLastProves();
 
 	}
 
@@ -400,6 +408,36 @@ public class RulesReader {
 				// TODO: handle exception
 				System.out.println("eror in writing file.....");
 			}
+		}
+	}
+
+	public void writeForwardChainingRules() {
+		for (int i = 0; i < rules.size(); i++) {
+			ArrayList<String> ifPart = rules.get(i).getIF();
+			ArrayList<String> thenPart = rules.get(i).getTHEN();
+
+			try {
+				FileWriter myWriter = new FileWriter("chrFile.txt", true);
+
+				for (int j = 0; j < ifPart.size(); j++) {
+					myWriter.write(ifPart.get(j).toLowerCase() + ",");
+				}
+				myWriter.write("forward ==> ");
+
+				for (int j = 0; j < thenPart.size(); j++) {
+					if (j == thenPart.size() - 1) {
+						myWriter.write(thenPart.get(j).toLowerCase() + ".\n");
+					} else {
+						myWriter.write(thenPart.get(j).toLowerCase() + ",");
+					}
+				}
+
+				myWriter.close();
+			} catch (IOException e) {
+				// TODO: handle exception
+				System.out.println("eror in writing file.....");
+			}
+
 		}
 	}
 
