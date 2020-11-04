@@ -54,7 +54,8 @@ public class RulesReader {
 		reader.generateFirstThreeLines();
 
 		iter = letters.iterator();
-		reader.writeLastProves();
+		reader.writeBackChainLines();
+		// reader.writeLastProves();
 
 	}
 
@@ -374,9 +375,33 @@ public class RulesReader {
 
 	}
 
-	// public void writeBackChainLines() {
+	public void writeBackChainLines() {
+		for (int i = 0; i < rules.size(); i++) {
+			ArrayList<String> ifPart = rules.get(i).getIF();
+			ArrayList<String> thenPart = rules.get(i).getTHEN();
 
-	// }
+			try {
+				FileWriter myWriter = new FileWriter("chrFile.txt", true);
+
+				for (int j = 0; j < thenPart.size(); j++) {
+					myWriter.write("back/prove(" + thenPart.get(j).toLowerCase() + ")" + " <=> ");
+					for (int j2 = 0; j2 < ifPart.size(); j2++) {
+						if (j2 == ifPart.size() - 1) {
+							myWriter.write("prove(" + ifPart.get(j2).toLowerCase() + ").\n");
+						} else {
+							myWriter.write("prove(" + ifPart.get(j2).toLowerCase() + "),");
+						}
+					}
+				}
+
+				myWriter.close();
+
+			} catch (IOException e) {
+				// TODO: handle exception
+				System.out.println("eror in writing file.....");
+			}
+		}
+	}
 
 	public void writeLastProves() {
 		try {
