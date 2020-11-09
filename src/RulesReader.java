@@ -13,6 +13,7 @@ public class RulesReader {
 	// static ArrayList<String> letters;
 	static Set<String> letters;
 	static Iterator<String> iter;
+	public String FILENAME = "chrFile.txt";
 
 	/////////////////////////////////////////
 	/*
@@ -348,7 +349,7 @@ public class RulesReader {
 
 		// create the file
 		try {
-			File myObj = new File("chrFile.txt");
+			File myObj = new File(FILENAME);
 			myObj.createNewFile();
 
 		} catch (Exception e) {
@@ -358,7 +359,7 @@ public class RulesReader {
 
 		// write into the file
 		try {
-			FileWriter myWriter = new FileWriter("chrFile.txt");
+			FileWriter myWriter = new FileWriter(FILENAME);
 			// first Line
 			myWriter.write(":-use_module(library(chr)).\n");
 			// second line
@@ -375,7 +376,7 @@ public class RulesReader {
 				}
 			}
 			myWriter.write("\n");
-			myWriter.write("prove(X)/prove(X) <=> true.\n");
+			myWriter.write("prove(X)\\prove(X) <=> true.\n");
 			myWriter.close();
 		} catch (IOException e) {
 			System.out.println("eror in writing file.....");
@@ -389,10 +390,10 @@ public class RulesReader {
 			ArrayList<String> thenPart = rules.get(i).getTHEN();
 
 			try {
-				FileWriter myWriter = new FileWriter("chrFile.txt", true);
+				FileWriter myWriter = new FileWriter(FILENAME, true);
 
 				for (int j = 0; j < thenPart.size(); j++) {
-					myWriter.write("back/prove(" + thenPart.get(j).toLowerCase() + ")" + " <=> ");
+					myWriter.write("back\\prove(" + thenPart.get(j).toLowerCase() + ")" + " <=> ");
 					for (int j2 = 0; j2 < ifPart.size(); j2++) {
 						if (j2 == ifPart.size() - 1) {
 							myWriter.write("prove(" + ifPart.get(j2).toLowerCase() + ").\n");
@@ -417,19 +418,22 @@ public class RulesReader {
 			ArrayList<String> thenPart = rules.get(i).getTHEN();
 
 			try {
-				FileWriter myWriter = new FileWriter("chrFile.txt", true);
+				// FileWriter myWriter = new FileWriter("chrFile.txt", true);
 
-				for (int j = 0; j < ifPart.size(); j++) {
-					myWriter.write(ifPart.get(j).toLowerCase() + ",");
-				}
-				myWriter.write("forward ==> ");
+				// for (int j = 0; j < thenPart.size(); j++) {
+				// if (j == thenPart.size() - 1) {
+				// myWriter.write(thenPart.get(j).toLowerCase() + ".\n");
+				// } else {
+				// myWriter.write(thenPart.get(j).toLowerCase() + ",");
+				// }
+				// }
+				FileWriter myWriter = new FileWriter(FILENAME, true);
 
-				for (int j = 0; j < thenPart.size(); j++) {
-					if (j == thenPart.size() - 1) {
-						myWriter.write(thenPart.get(j).toLowerCase() + ".\n");
-					} else {
-						myWriter.write(thenPart.get(j).toLowerCase() + ",");
+				for (int k = 0; k < thenPart.size(); k++) {
+					for (int j = 0; j < ifPart.size(); j++) {
+						myWriter.write(ifPart.get(j).toLowerCase() + ",");
 					}
+					myWriter.write("forward ==> " + thenPart.get(k).toLowerCase() + "\n");
 				}
 
 				myWriter.close();
@@ -443,11 +447,11 @@ public class RulesReader {
 
 	public void writeLastProves() {
 		try {
-			FileWriter myWriter = new FileWriter("chrFile.txt", true);
+			FileWriter myWriter = new FileWriter(FILENAME, true);
 
 			while (iter.hasNext()) {
 				String theLetter = iter.next();
-				myWriter.write(theLetter + "/prove(" + theLetter + ")" + " <=> true.\n");
+				myWriter.write(theLetter + "\\prove(" + theLetter + ")" + " <=> true.\n");
 			}
 			myWriter.close();
 		} catch (IOException e) {
